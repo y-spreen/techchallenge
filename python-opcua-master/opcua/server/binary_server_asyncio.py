@@ -9,9 +9,9 @@ except ImportError:
     import trollius as asyncio
 
 
-from opcua import ua
+from my_opcua import ua
 import opcua.ua.ua_binary as uabin
-from opcua.server.uaprocessor import UaProcessor
+from my_opcua.server.uaprocessor import UaProcessor
 
 logger = logging.getLogger(__name__)
 

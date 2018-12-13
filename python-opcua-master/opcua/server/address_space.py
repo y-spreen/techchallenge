@@ -8,8 +8,8 @@ try:
 except:
     import pickle
 
-from opcua import ua
-from opcua.server.user_manager import UserManager
+from my_opcua import ua
+from my_opcua.server.user_manager import UserManager
 
 
 class AttributeValue(object):

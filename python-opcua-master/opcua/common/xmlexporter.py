@@ -8,10 +8,10 @@ import xml.etree.ElementTree as Et
 from copy import copy
 import base64
 
-from opcua import ua
-from opcua.ua import object_ids as o_ids
-from opcua.common.ua_utils import get_base_data_type
-from opcua.ua.uatypes import extension_object_ids
+from my_opcua import ua
+from my_opcua.ua import object_ids as o_ids
+from my_opcua.common.ua_utils import get_base_data_type
+from my_opcua.ua.uatypes import extension_object_ids
 
 
 class XmlExporter(object):

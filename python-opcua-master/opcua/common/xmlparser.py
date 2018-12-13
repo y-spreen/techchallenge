@@ -1,5 +1,5 @@
 """
-parse xml file from opcua-spec
+parse xml file from my_opcua-spec
 """
 import logging
 from pytz import utc
@@ -10,8 +10,8 @@ import base64
 
 import xml.etree.ElementTree as ET
 
-from opcua.common import ua_utils
-from opcua import ua
+from my_opcua.common import ua_utils
+from my_opcua import ua
 
 
 def ua_type_to_python(val, uatype_as_str):

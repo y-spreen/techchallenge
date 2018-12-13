@@ -1,11 +1,11 @@
 import logging
 
 from abc import ABCMeta, abstractmethod
-from opcua.ua import CryptographyNone, SecurityPolicy
-from opcua.ua import MessageSecurityMode
-from opcua.ua import UaError
+from my_opcua.ua import CryptographyNone, SecurityPolicy
+from my_opcua.ua import MessageSecurityMode
+from my_opcua.ua import UaError
 try:
-    from opcua.crypto import uacrypto
+    from my_opcua.crypto import uacrypto
     CRYPTOGRAPHY_AVAILABLE = True
 except ImportError:
     CRYPTOGRAPHY_AVAILABLE = False

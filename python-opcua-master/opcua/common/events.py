@@ -1,9 +1,9 @@
 import copy
 
-from opcua import ua
+from my_opcua import ua
 import opcua
-from opcua.ua.uaerrors import UaError
-from opcua.common import ua_utils
+from my_opcua.ua.uaerrors import UaError
+from my_opcua.common import ua_utils
 
 
 class Event(object):

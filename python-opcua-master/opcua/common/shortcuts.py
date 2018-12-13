@@ -1,5 +1,5 @@
-from opcua.ua import ObjectIds
-from opcua import Node
+from my_opcua.ua import ObjectIds
+from my_opcua import Node
 
 
 class Shortcuts(object):

@@ -8,9 +8,9 @@ import logging
 import uuid
 from enum import IntEnum, Enum
 
-from opcua.ua.uaerrors import UaError
-from opcua.common.utils import Buffer
-from opcua import ua
+from my_opcua.ua.uaerrors import UaError
+from my_opcua.common.utils import Buffer
+from my_opcua import ua
 
 if sys.version_info.major > 2:
     unicode = str

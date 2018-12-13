@@ -7,20 +7,20 @@ try:
 except ImportError:  # support for python2
     from urlparse import urlparse
 
-from opcua import ua
-from opcua.client.ua_client import UaClient
-from opcua.common.xmlimporter import XmlImporter
-from opcua.common.xmlexporter import XmlExporter
-from opcua.common.node import Node
-from opcua.common.manage_nodes import delete_nodes
-from opcua.common.subscription import Subscription
-from opcua.common import utils
-from opcua.crypto import security_policies
-from opcua.common.shortcuts import Shortcuts
-from opcua.common.structures import load_type_definitions, load_enums
+from my_opcua import ua
+from my_opcua.client.ua_client import UaClient
+from my_opcua.common.xmlimporter import XmlImporter
+from my_opcua.common.xmlexporter import XmlExporter
+from my_opcua.common.node import Node
+from my_opcua.common.manage_nodes import delete_nodes
+from my_opcua.common.subscription import Subscription
+from my_opcua.common import utils
+from my_opcua.crypto import security_policies
+from my_opcua.common.shortcuts import Shortcuts
+from my_opcua.common.structures import load_type_definitions, load_enums
 use_crypto = True
 try:
-    from opcua.crypto import uacrypto
+    from my_opcua.crypto import uacrypto
 except ImportError:
     logging.getLogger(__name__).warning("cryptography is not installed, use of crypto disabled")
     use_crypto = False

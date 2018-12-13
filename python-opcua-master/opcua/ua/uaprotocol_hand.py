@@ -1,9 +1,9 @@
 import struct
 
-from opcua.ua import uaprotocol_auto as auto
-from opcua.ua import uatypes
-from opcua.common import utils
-from opcua.ua.uatypes import AccessLevel, FrozenClass
+from my_opcua.ua import uaprotocol_auto as auto
+from my_opcua.ua import uatypes
+from my_opcua.common import utils
+from my_opcua.ua.uatypes import AccessLevel, FrozenClass
 
 OPC_TCP_SCHEME = 'opc.tcp'
 

@@ -5,9 +5,9 @@ server side implementation of subscription service
 from threading import RLock
 import logging
 
-from opcua import ua
-from opcua.common import utils
-from opcua.server.internal_subscription import InternalSubscription
+from my_opcua import ua
+from my_opcua.common import utils
+from my_opcua.server.internal_subscription import InternalSubscription
 
 
 class SubscriptionService(object):

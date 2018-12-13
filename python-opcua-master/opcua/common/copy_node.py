@@ -1,7 +1,7 @@
 import logging
 
-from opcua import ua
-from opcua.common.node import Node
+from my_opcua import ua
+from my_opcua.common.node import Node
 
 
 logger = logging.getLogger(__name__)

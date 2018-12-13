@@ -4,8 +4,8 @@ and browse address space
 """
 from datetime import datetime
 
-from opcua import ua
-from opcua.common import events
+from my_opcua import ua
+from my_opcua.common import events
 import opcua.common
 
 def _check_results(results, reqlen = 1):

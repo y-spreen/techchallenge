@@ -4,11 +4,11 @@ from datetime import datetime
 from threading import Lock
 import sqlite3
 
-from opcua import ua
-from opcua.ua.ua_binary import variant_from_binary, variant_to_binary
-from opcua.common.utils import Buffer
-from opcua.common import events
-from opcua.server.history import HistoryStorageInterface
+from my_opcua import ua
+from my_opcua.ua.ua_binary import variant_from_binary, variant_to_binary
+from my_opcua.common.utils import Buffer
+from my_opcua.common import events
+from my_opcua.server.history import HistoryStorageInterface
 
 
 class HistorySQLite(HistoryStorageInterface):

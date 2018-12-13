@@ -6,9 +6,9 @@ import logging
 from threading import Lock
 import collections
 
-from opcua import ua
-from opcua.common import events
-from opcua import Node
+from my_opcua import ua
+from my_opcua.common import events
+from my_opcua import Node
 
 
 class SubHandler(object):

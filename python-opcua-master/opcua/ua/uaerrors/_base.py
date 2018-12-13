@@ -2,7 +2,7 @@
 Define exceptions to be raised at various places in the stack
 """
 
-from opcua.compat import with_metaclass
+from my_opcua.compat import with_metaclass
 
 class _AutoRegister(type):
     def __new__(mcs, name, bases, dict):

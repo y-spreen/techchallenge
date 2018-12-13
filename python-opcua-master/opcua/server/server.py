@@ -10,26 +10,26 @@ except ImportError:
     from urlparse import urlparse
 
 
-from opcua import ua
-# from opcua.binary_server import BinaryServer
-from opcua.server.binary_server_asyncio import BinaryServer
-from opcua.server.internal_server import InternalServer
-from opcua.server.event_generator import EventGenerator
-from opcua.server.user_manager import UserManager
-from opcua.server.discovery_service import LocalDiscoveryService
-from opcua.common.node import Node
-from opcua.common.subscription import Subscription
-from opcua.common.manage_nodes import delete_nodes
-from opcua.crypto import security_policies
-from opcua.common.event_objects import BaseEvent
-from opcua.common.shortcuts import Shortcuts
-from opcua.common.structures import load_type_definitions, load_enums
-from opcua.common.xmlexporter import XmlExporter
-from opcua.common.xmlimporter import XmlImporter
-from opcua.common.ua_utils import get_nodes_of_namespace
+from my_opcua import ua
+# from my_opcua.binary_server import BinaryServer
+from my_opcua.server.binary_server_asyncio import BinaryServer
+from my_opcua.server.internal_server import InternalServer
+from my_opcua.server.event_generator import EventGenerator
+from my_opcua.server.user_manager import UserManager
+from my_opcua.server.discovery_service import LocalDiscoveryService
+from my_opcua.common.node import Node
+from my_opcua.common.subscription import Subscription
+from my_opcua.common.manage_nodes import delete_nodes
+from my_opcua.crypto import security_policies
+from my_opcua.common.event_objects import BaseEvent
+from my_opcua.common.shortcuts import Shortcuts
+from my_opcua.common.structures import load_type_definitions, load_enums
+from my_opcua.common.xmlexporter import XmlExporter
+from my_opcua.common.xmlimporter import XmlImporter
+from my_opcua.common.ua_utils import get_nodes_of_namespace
 use_crypto = True
 try:
-    from opcua.crypto import uacrypto
+    from my_opcua.crypto import uacrypto
 except ImportError:
     logging.getLogger(__name__).warning("cryptography is not installed, use of crypto disabled")
     use_crypto = False

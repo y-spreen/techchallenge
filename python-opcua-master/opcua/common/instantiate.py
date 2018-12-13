@@ -4,10 +4,10 @@ Instantiate a new node and its child nodes from a node type.
 
 import logging
 
-from opcua import Node
-from opcua import ua
-from opcua.common import ua_utils
-from opcua.common.copy_node import _rdesc_from_node, _read_and_copy_attrs
+from my_opcua import Node
+from my_opcua import ua
+from my_opcua.common import ua_utils
+from my_opcua.common.copy_node import _rdesc_from_node, _read_and_copy_attrs
 
 logger = logging.getLogger(__name__)
 

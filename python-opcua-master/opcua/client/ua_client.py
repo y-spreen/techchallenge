@@ -9,10 +9,10 @@ from threading import Thread, Lock
 from concurrent.futures import Future
 from functools import partial
 
-from opcua import ua
-from opcua.ua.ua_binary import struct_from_binary, uatcp_to_binary, struct_to_binary, nodeid_from_binary
-from opcua.ua.uaerrors import UaError, BadTimeout, BadNoSubscription, BadSessionClosed
-from opcua.common.connection import SecureConnection
+from my_opcua import ua
+from my_opcua.ua.ua_binary import struct_from_binary, uatcp_to_binary, struct_to_binary, nodeid_from_binary
+from my_opcua.ua.uaerrors import UaError, BadTimeout, BadNoSubscription, BadSessionClosed
+from my_opcua.common.connection import SecureConnection
 
 
 class UASocketClient(object):

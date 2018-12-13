@@ -8,8 +8,8 @@ try:
 except ImportError:  # support for python2
     from urlparse import urlparse
 
-from opcua import ua
-from opcua.client.client import Client
+from my_opcua import ua
+from my_opcua.client.client import Client
 
 class RegistrationService(object):
     DEF_DISCOVERY_URL = "opc.tcp://localhost:4840" # By OPC-UA specification.

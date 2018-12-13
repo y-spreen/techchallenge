@@ -2,9 +2,9 @@ import logging
 from datetime import timedelta
 from datetime import datetime
 
-from opcua import Subscription
-from opcua import ua
-from opcua.common import utils
+from my_opcua import Subscription
+from my_opcua import ua
+from my_opcua.common import utils
 
 
 class UaNodeAlreadyHistorizedError(ua.UaError):

@@ -2,8 +2,8 @@
 High level method related functions
 """
 
-from opcua import ua
-from opcua.common import node
+from my_opcua import ua
+from my_opcua.common import node
 
 
 def call_method(parent, methodid, *args):

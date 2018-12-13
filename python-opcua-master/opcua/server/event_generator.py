@@ -2,10 +2,10 @@ import logging
 from datetime import datetime
 import uuid
 
-from opcua import ua
-from opcua import Node
-from opcua.common import events
-from opcua.common import event_objects
+from my_opcua import ua
+from my_opcua import Node
+from my_opcua.common import events
+from my_opcua.common import event_objects
 
 
 class EventGenerator(object):

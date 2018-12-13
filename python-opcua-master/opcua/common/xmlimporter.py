@@ -7,9 +7,9 @@ import uuid
 from copy import copy
 
 import opcua
-from opcua import ua
-from opcua.common import xmlparser
-from opcua.ua.uaerrors import UaError
+from my_opcua import ua
+from my_opcua.common import xmlparser
+from my_opcua.ua.uaerrors import UaError
 
 import sys
 

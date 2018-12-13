@@ -5,8 +5,8 @@ Autogenerate code from xml spec
 from datetime import datetime
 from enum import IntEnum
 
-from opcua.ua.uatypes import *
-from opcua.ua.object_ids import ObjectIds
+from my_opcua.ua.uatypes import *
+from my_opcua.ua.object_ids import ObjectIds
 
 
 class NamingRuleType(IntEnum):

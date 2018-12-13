@@ -14,22 +14,22 @@ except ImportError:
     from urlparse import urlparse
 
 
-from opcua import ua
-from opcua.common import utils
-from opcua.common.callback import (CallbackType, ServerItemCallback,
+from my_opcua import ua
+from my_opcua.common import utils
+from my_opcua.common.callback import (CallbackType, ServerItemCallback,
                                    CallbackDispatcher)
-from opcua.common.node import Node
-from opcua.server.history import HistoryManager
-from opcua.server.address_space import AddressSpace
-from opcua.server.address_space import AttributeService
-from opcua.server.address_space import ViewService
-from opcua.server.address_space import NodeManagementService
-from opcua.server.address_space import MethodService
-from opcua.server.subscription_service import SubscriptionService
-from opcua.server.discovery_service import LocalDiscoveryService
-from opcua.server.standard_address_space import standard_address_space
-from opcua.server.user_manager import UserManager
-#from opcua.common import xmlimporter
+from my_opcua.common.node import Node
+from my_opcua.server.history import HistoryManager
+from my_opcua.server.address_space import AddressSpace
+from my_opcua.server.address_space import AttributeService
+from my_opcua.server.address_space import ViewService
+from my_opcua.server.address_space import NodeManagementService
+from my_opcua.server.address_space import MethodService
+from my_opcua.server.subscription_service import SubscriptionService
+from my_opcua.server.discovery_service import LocalDiscoveryService
+from my_opcua.server.standard_address_space import standard_address_space
+from my_opcua.server.user_manager import UserManager
+#from my_opcua.common import xmlimporter
 
 
 class SessionState(Enum):

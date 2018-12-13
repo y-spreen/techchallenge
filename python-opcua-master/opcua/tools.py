@@ -13,12 +13,12 @@ except ImportError:
     def embed():
         code.interact(local=dict(globals(), **locals()))
 
-from opcua import ua
-from opcua import Client
-from opcua import Server
-from opcua import Node
-from opcua import uamethod
-from opcua.ua.uaerrors import UaStatusCodeError
+from my_opcua import ua
+from my_opcua import Client
+from my_opcua import Server
+from my_opcua import Node
+from my_opcua import uamethod
+from my_opcua.ua.uaerrors import UaStatusCodeError
 
 
 def add_minimum_args(parser):
@@ -427,7 +427,7 @@ def cert_to_string(der):
     if not der:
         return '[no certificate]'
     try:
-        from opcua.crypto import uacrypto
+        from my_opcua.crypto import uacrypto
     except ImportError:
         return "{0} bytes".format(len(der))
     cert = uacrypto.x509_from_der(der)

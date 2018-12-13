@@ -12,11 +12,11 @@ import re
 import itertools
 from datetime import datetime, timedelta, MAXYEAR, tzinfo
 
-from opcua.ua import status_codes
-from opcua.ua import ObjectIds
-from opcua.ua.uaerrors import UaError
-from opcua.ua.uaerrors import UaStatusCodeError
-from opcua.ua.uaerrors import UaStringParsingError
+from my_opcua.ua import status_codes
+from my_opcua.ua import ObjectIds
+from my_opcua.ua.uaerrors import UaError
+from my_opcua.ua.uaerrors import UaStatusCodeError
+from my_opcua.ua.uaerrors import UaStringParsingError
 
 logger = logging.getLogger(__name__)
 

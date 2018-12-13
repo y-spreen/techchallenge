@@ -1,9 +1,9 @@
 """
 High level functions to create nodes
 """
-from opcua import ua
-from opcua.common import node
-from opcua.common.instantiate import instantiate
+from my_opcua import ua
+from my_opcua.common import node
+from my_opcua.common.instantiate import instantiate
 
 
 def _parse_nodeid_qname(*args):

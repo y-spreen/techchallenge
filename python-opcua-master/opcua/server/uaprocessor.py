@@ -3,11 +3,11 @@ import logging
 from threading import RLock, Lock
 import time
 
-from opcua import ua
-from opcua.ua.ua_binary import nodeid_from_binary, struct_from_binary
-from opcua.ua.ua_binary import struct_to_binary, uatcp_to_binary
-from opcua.common import utils
-from opcua.common.connection import SecureConnection
+from my_opcua import ua
+from my_opcua.ua.ua_binary import nodeid_from_binary, struct_from_binary
+from my_opcua.ua.ua_binary import struct_to_binary, uatcp_to_binary
+from my_opcua.common import utils
+from my_opcua.common.connection import SecureConnection
 
 
 class PublishRequestData(object):
