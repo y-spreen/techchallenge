@@ -5,9 +5,9 @@ from struct import unpack_from
 
 use_crypto = True
 try:
-    from opcua.crypto import uacrypto
+    from my_opcua.crypto import uacrypto
 except ImportError:
-    logging.getLogger(__name__).warning("cryptography is not installed, use of crypto disabled")
+    #logging.getLogger(__name__).warning("cryptography is not installed, use of crypto disabled")
     use_crypto = False
 
 
