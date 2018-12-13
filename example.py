@@ -259,8 +259,13 @@ def uacall():
 
         print( "method_id=%s\nval=%s" % (method_id,val) )
 
-        result_variants = node.call_method( method_id, *val )
-        print( "resulting result_variants={0!s}".format(result_variants) )
+        results = []
+
+        for _ in range(10):
+            result_variants = node.call_method( method_id, *val )
+            results.append( result_variants[0][0].Body.hex()[50:][:24] )
+            print(results[-1])
+
     finally:
         client.disconnect()
     sys.exit(0)
