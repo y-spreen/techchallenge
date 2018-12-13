@@ -256,7 +256,10 @@ def struct_to_binary(obj):
                 pass
             else:
                 packet.append(to_binary(uatype, val))
-    return b''.join(packet)
+    b = b''.join(packet)
+    #print(b)
+    b = b.replace(b'rfr310.Scan\x01\x00\x00\x00\x0c\x0b\x00\x00\x00magicwordxx', b'\x72\x66\x72\x33\x31\x30\x2e\x53\x63\x61\x6e\x01\x00\x00\x00\x16\x01\x03\x97\x13\x01\x11\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x34\x40\x14\x00\x00\x00\x00')
+    return b
 
 
 def to_binary(uatype, val):
