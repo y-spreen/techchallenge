@@ -70,7 +70,7 @@ class UaStatusCodeError(with_metaclass(_AutoRegister, UaError)):
 
     def __str__(self):
         # import here to avoid circular import problems
-        import opcua.ua.status_codes as status_codes
+        import my_opcua.ua.status_codes as status_codes
 
         return "{1}({0})".format(*status_codes.get_name_and_doc(self.code))
 

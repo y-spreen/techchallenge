@@ -1,7 +1,7 @@
 import copy
 
 from my_opcua import ua
-import opcua
+import my_opcua as opcua
 from my_opcua.ua.uaerrors import UaError
 from my_opcua.common import ua_utils
 

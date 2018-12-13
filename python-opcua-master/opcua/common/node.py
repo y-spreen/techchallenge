@@ -6,7 +6,7 @@ from datetime import datetime
 
 from my_opcua import ua
 from my_opcua.common import events
-import opcua.common
+import my_opcua.common
 
 def _check_results(results, reqlen = 1):
     assert len(results) == reqlen, results
@@ -93,7 +93,7 @@ class Node(object):
         may not be convertible to VariantType
         """
         result = self.get_attribute(ua.AttributeIds.DataType)
-        return opcua.common.ua_utils.data_type_to_variant_type(Node(self.server, result.Value.Value))
+        return my_opcua.common.ua_utils.data_type_to_variant_type(Node(self.server, result.Value.Value))
 
     def get_access_level(self):
         """
@@ -575,7 +575,7 @@ class Node(object):
         """
         Delete node from address space
         """
-        results = opcua.common.manage_nodes.delete_nodes(self.server, [self], recursive, delete_references)
+        results = my_opcua.common.manage_nodes.delete_nodes(self.server, [self], recursive, delete_references)
         _check_results(results)
 
     def _fill_delete_reference_item(self, rdesc, bidirectional = False):
@@ -644,31 +644,31 @@ class Node(object):
             self.add_reference(rule, ua.ObjectIds.HasModellingRule, True, False)
 
     def add_folder(self, nodeid, bname):
-        return  opcua.common.manage_nodes.create_folder(self, nodeid, bname)
+        return  my_opcua.common.manage_nodes.create_folder(self, nodeid, bname)
 
     def add_object(self, nodeid, bname, objecttype=None):
-        return opcua.common.manage_nodes.create_object(self, nodeid, bname, objecttype)
+        return my_opcua.common.manage_nodes.create_object(self, nodeid, bname, objecttype)
 
     def add_variable(self, nodeid, bname, val, varianttype=None, datatype=None):
-        return opcua.common.manage_nodes.create_variable(self, nodeid, bname, val, varianttype, datatype)
+        return my_opcua.common.manage_nodes.create_variable(self, nodeid, bname, val, varianttype, datatype)
 
     def add_object_type(self, nodeid, bname):
-        return opcua.common.manage_nodes.create_object_type(self, nodeid, bname)
+        return my_opcua.common.manage_nodes.create_object_type(self, nodeid, bname)
 
     def add_variable_type(self, nodeid, bname, datatype):
-        return opcua.common.manage_nodes.create_variable_type(self, nodeid, bname, datatype)
+        return my_opcua.common.manage_nodes.create_variable_type(self, nodeid, bname, datatype)
 
     def add_data_type(self, nodeid, bname, description=None):
-        return opcua.common.manage_nodes.create_data_type(self, nodeid, bname, description=None)
+        return my_opcua.common.manage_nodes.create_data_type(self, nodeid, bname, description=None)
 
     def add_property(self, nodeid, bname, val, varianttype=None, datatype=None):
-        return opcua.common.manage_nodes.create_property(self, nodeid, bname, val, varianttype, datatype)
+        return my_opcua.common.manage_nodes.create_property(self, nodeid, bname, val, varianttype, datatype)
 
     def add_method(self, *args):
-        return opcua.common.manage_nodes.create_method(self, *args)
+        return my_opcua.common.manage_nodes.create_method(self, *args)
 
     def add_reference_type(self, nodeid, bname, symmetric=True, inversename=None):
-        return opcua.common.manage_nodes.create_reference_type(self, nodeid, bname, symmetric, inversename)
+        return my_opcua.common.manage_nodes.create_reference_type(self, nodeid, bname, symmetric, inversename)
 
     def call_method(self, methodid, *args):
-        return opcua.common.methods.call_method(self, methodid, *args)
+        return my_opcua.common.methods.call_method(self, methodid, *args)

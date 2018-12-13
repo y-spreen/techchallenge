@@ -10,7 +10,7 @@ except ImportError:
 
 
 from my_opcua import ua
-import opcua.ua.ua_binary as uabin
+import my_opcua.ua.ua_binary as uabin
 from my_opcua.server.uaprocessor import UaProcessor
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 
 import os.path
 
-import opcua
+import my_opcua as opcua
 
 from my_opcua.server.standard_address_space.standard_address_space_part3 import create_standard_address_space_Part3
 from my_opcua.server.standard_address_space.standard_address_space_part4 import create_standard_address_space_Part4

@@ -409,8 +409,8 @@ class NodeId(object):
     __repr__ = __str__
 
     def to_binary(self):
-        import opcua
-        return opcua.ua.ua_binary.nodeid_to_binary(self)
+        import my_opcua as opcua
+        return my_opcua.ua.ua_binary.nodeid_to_binary(self)
 
 
 class TwoByteNodeId(NodeId):
@@ -986,8 +986,8 @@ def register_extension_object(name, nodeid, class_type):
     extension_object_ids[name] = nodeid
     # FIXME: Next line is not exactly a Python best practices, so feel free to propose something else
     # add new extensions objects to ua modules to automate decoding
-    import opcua.ua
-    setattr(opcua.ua, name, class_type)
+    import my_opcua.ua
+    setattr(my_opcua.ua, name, class_type)
 
 
 def get_extensionobject_class_type(typeid):

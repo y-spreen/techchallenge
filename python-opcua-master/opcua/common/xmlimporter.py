@@ -6,7 +6,7 @@ import logging
 import uuid
 from copy import copy
 
-import opcua
+import my_opcua as opcua
 from my_opcua import ua
 from my_opcua.common import xmlparser
 from my_opcua.ua.uaerrors import UaError
