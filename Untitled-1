@@ -1,0 +1,85 @@
+Endpoint 1:
+  Endpoint URL: opc.tcp://Apps-mica-euymq:4840
+  Application URI: urn:Apps-mica-euymq:UnifiedAutomation:UaServerCpp
+  Product URI: urn:UnifiedAutomation:UaServerCpp
+  Application Name: UaServerCpp@Apps-mica-euymq
+  Application Type: ApplicationType.Server
+  Discovery URL: opc.tcp://Apps-mica-euymq:4840
+  Server Certificate: 1544 bytes
+  Security Mode: .None_
+  Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#None
+  User policy: Anonymous
+    Token type: UserTokenType.Anonymous
+  User policy: UserName
+    Token type: UserTokenType.UserName
+    Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic256
+  Transport Profile URI: http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary
+  Security Level: 0
+Endpoint 2:
+  Endpoint URL: opc.tcp://Apps-mica-euymq:4840
+  Application URI: urn:Apps-mica-euymq:UnifiedAutomation:UaServerCpp
+  Product URI: urn:UnifiedAutomation:UaServerCpp
+  Application Name: UaServerCpp@Apps-mica-euymq
+  Application Type: ApplicationType.Server
+  Discovery URL: opc.tcp://Apps-mica-euymq:4840
+  Server Certificate: 1544 bytes
+  Security Mode: MessageSecurityMode.Sign
+  Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15
+  User policy: Anonymous
+    Token type: UserTokenType.Anonymous
+  User policy: UserName
+    Token type: UserTokenType.UserName
+    Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15
+  Transport Profile URI: http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary
+  Security Level: 60
+Endpoint 3:
+  Endpoint URL: opc.tcp://Apps-mica-euymq:4840
+  Application URI: urn:Apps-mica-euymq:UnifiedAutomation:UaServerCpp
+  Product URI: urn:UnifiedAutomation:UaServerCpp
+  Application Name: UaServerCpp@Apps-mica-euymq
+  Application Type: ApplicationType.Server
+  Discovery URL: opc.tcp://Apps-mica-euymq:4840
+  Server Certificate: 1544 bytes
+  Security Mode: MessageSecurityMode.SignAndEncrypt
+  Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15
+  User policy: Anonymous
+    Token type: UserTokenType.Anonymous
+  User policy: UserName
+    Token type: UserTokenType.UserName
+    Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15
+  Transport Profile URI: http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary
+  Security Level: 110
+Endpoint 4:
+  Endpoint URL: opc.tcp://Apps-mica-euymq:4840
+  Application URI: urn:Apps-mica-euymq:UnifiedAutomation:UaServerCpp
+  Product URI: urn:UnifiedAutomation:UaServerCpp
+  Application Name: UaServerCpp@Apps-mica-euymq
+  Application Type: ApplicationType.Server
+  Discovery URL: opc.tcp://Apps-mica-euymq:4840
+  Server Certificate: 1544 bytes
+  Security Mode: MessageSecurityMode.Sign
+  Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic256
+  User policy: Anonymous
+    Token type: UserTokenType.Anonymous
+  User policy: UserName
+    Token type: UserTokenType.UserName
+    Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic256
+  Transport Profile URI: http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary
+  Security Level: 70
+Endpoint 5:
+  Endpoint URL: opc.tcp://Apps-mica-euymq:4840
+  Application URI: urn:Apps-mica-euymq:UnifiedAutomation:UaServerCpp
+  Product URI: urn:UnifiedAutomation:UaServerCpp
+  Application Name: UaServerCpp@Apps-mica-euymq
+  Application Type: ApplicationType.Server
+  Discovery URL: opc.tcp://Apps-mica-euymq:4840
+  Server Certificate: 1544 bytes
+  Security Mode: MessageSecurityMode.SignAndEncrypt
+  Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic256
+  User policy: Anonymous
+    Token type: UserTokenType.Anonymous
+  User policy: UserName
+    Token type: UserTokenType.UserName
+    Security Policy URI: http://opcfoundation.org/UA/SecurityPolicy#Basic256
+  Transport Profile URI: http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary
+  Security Level: 120

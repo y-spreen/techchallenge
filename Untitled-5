@@ -1,0 +1,14 @@
+DisplayName                       NodeId                              BrowseName                Value                    
+
+InputArguments                    ns=4;s=rfr310.Scan.InputArguments   0:InputArguments          [Argument(Name:Setting, DataType:FourByteNodeId(ns=3;i=3010), ValueRank:-1, ArrayDimensions:[], Description:LocalizedText(Encoding:0, Locale:None, Text:None))]
+OutputArguments                   ns=4;s=rfr310.Scan.OutputArguments  0:OutputArguments         [Argument(Name:Results, DataType:FourByteNodeId(ns=3;i=3007), ValueRank:1, ArrayDimensions:[],  Description:LocalizedText(Encoding:0, Locale:None, Text:None)), Argument(Name:Status, DataType:FourByteNodeId(ns=3;i=3013), ValueRank:-1, ArrayDimensions:[], Description:LocalizedText(Encoding:0, Locale:None, Text:None))]
+
+
+
+[Argument(
+    Name:Setting,
+    DataType:FourByteNodeId(ns=3;i=3010),
+    ValueRank:-1,
+    ArrayDimensions:[],
+    Description:LocalizedText(Encoding:0, Locale:None, Text:None)
+)]

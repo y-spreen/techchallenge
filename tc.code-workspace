@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"uri": "ssh://pi/",
+		"name": "SSH FS - pi"
+	},
+	{
+		"path": "/Users/user/Desktop"
+	},
+	{
+		"path": "/Users/user/Downloads/python-opcua-master/opcua"
+	}
+]
+}
