@@ -49,6 +49,7 @@ def _call_method(server, parentnodeid, methodid, arguments):
     request.InputArguments = arguments
     methodstocall = [request]
     results = server.call(methodstocall)
+    #print(results)
     res = results[0]
     res.StatusCode.check()
     return res

@@ -1,0 +1,3 @@
+curl -X GET http://10.25.172.200:5000/user?uiIDET  -H =ID horization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDQ3MTc1ODksImlhdCI6MTU0NDcxNzI4OSwibmJmIjoxNTQ0NzE3Mjg5LCJpZGVudGl0eSI6MX0.Yku4zgUsSc273bwqPLnJJ_unPJa-goumc9BqaELITyA'
+
+curl -X GET http://10.25.172.200:5000/user?ui=aaaaaa -H 'Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDQ3MTc1ODksImlhdCI6MTU0NDcxNzI4OSwibmJmIjoxNTQ0NzE3Mjg5LCJpZGVudGl0eSI6MX0.Yku4zgUsSc273bwqPLnJJ_unPJa-goumc9BqaELITyA'
