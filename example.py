@@ -257,14 +257,24 @@ def uacall():
             # last resort:
             method_id = ua.NodeId( identifier=args.method )#, namespaceidx=? )#, nodeidtype=?): )
 
-        print( "method_id=%s\nval=%s" % (method_id,val) )
+        #print( "method_id=%s\nval=%s" % (method_id,val) )
 
-        results = []
 
-        for _ in range(10):
+        #for _ in range(1):
+        #    with suppress(Exception):
+        i = 0
+        while True:
             result_variants = node.call_method( method_id, *val )
-            results.append( result_variants[0][0].Body.hex()[50:][:24] )
-            print(results[-1])
+            #ids = ""
+            #for res in result_variants[0]:
+            #    ids = res.Body.hex()[50:][:24][-3:]
+            #    ids = "First ID: " + str(int(ids, 16))
+            #    #print(res.Body.hex()[50:][:24])
+            #print("%d tags found. %s" % (min([len(result_variants[0]), 99]), ids))
+            #from time import sleep
+            ##sleep(2)
+            print(i)
+            i+=1
 
     finally:
         client.disconnect()
