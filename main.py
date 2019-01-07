@@ -69,7 +69,7 @@ class Light:
     initial = 5
 
 
-LIGHT = Light.warning
+LIGHT = Light.initial
 
 
 def set_light(g, y, r, b):
@@ -164,6 +164,7 @@ def booking_thread():
 
 def uhf_thread():
     readings = []
+    sleep(5)
 
     while True:
         sleep(DELAY)
