@@ -12,7 +12,7 @@ def read_uhf_ids():
 
 
 def read_card():
-    return read_uhf_ids()[0]
+    return None if randint(0, 1) else 7
 
 
 CARD_EVENT = None
@@ -52,17 +52,15 @@ def card_thread():
                 reading = None
 
 
-# 0: blink green (idle)       ____*_
-# 1: pulse yellow             ___***
-# 2: flash red                _*_*_*
-# 3: flash red fast           _*_*_*
-# 4: blue blinks (one time)   ___*_*
-# 5: flash all lights (start) _*#+~_
-
-LIGHT = 5
-
-
 class Light:
+    """
+    0: blink green (idle)       ____*_
+    1: pulse yellow             ___***
+    2: flash red                _*_*_*
+    3: flash red fast           _*_*_*
+    4: blue blinks (one time)   ___*_*
+    5: flash all lights (start) _*#+~_
+    """
     idle = 0
     warning = 1
     mistake = 2
@@ -71,12 +69,15 @@ class Light:
     initial = 5
 
 
+LIGHT = Light.warning
+
+
 def set_light(g, y, r, b):
     g = '.#'[g]
     y = '.#'[y]
     r = '.#'[r]
     b = '.#'[b]
-    print('   '+g+y+r+b, end="\r")
+    print('   '+g+y+r+b+'      ', end="\r")
 
 
 def light_thread():
@@ -105,14 +106,15 @@ def light_thread():
         sleep(DELAY)
 
         if LIGHT != -1:
-            tick = 0
+            if light != LIGHT:
+                tick = 0
             light = LIGHT
             LIGHT = -1
 
         set_light(*cmds[light][tick])
 
         tick += 1
-        if tick == len(cmds[light]) and is_one_time[light]:
+        if tick >= len(cmds[light]) and is_one_time[light]:
             tick = light = 0
             LIGHT = -1
         tick %= len(cmds[light])
@@ -136,6 +138,7 @@ def booking_thread():
         ENTER_EVENTS = []
 
         for e in exit_events:
+            print(' x', end="\r")
             if e in in_booking:
                 in_booking = filter(lambda b: b != e, in_booking)
             elif e in in_returning:
@@ -143,6 +146,7 @@ def booking_thread():
             else:
                 LIGHT = Light.error
         for e in enter_events:
+            print(' e', end="\r")
             if booked.get(e, None) is None:
                 in_booking.append(e)
                 LIGHT = Light.warning
@@ -151,6 +155,7 @@ def booking_thread():
                 del booked[e]
                 LIGHT = Light.notification
         if card_event is not None:
+            print(' c', end="\r")
             if len(in_booking) > 0:
                 for b in in_booking:
                     booked[b] = card_event
