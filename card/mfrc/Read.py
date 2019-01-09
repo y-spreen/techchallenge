@@ -50,7 +50,7 @@ def get_member(c_id):
     r = requests.get(api_endpoint, headers={
         "Authorization": token
     })
-    return r.text
+    return r.json()["MemberID"]
 
 # Capture SIGINT for cleanup when the script is aborted
 

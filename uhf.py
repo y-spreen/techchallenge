@@ -22,6 +22,7 @@ from my_opcua.ua.uaerrors import UaStatusCodeError
 
 from contextlib import suppress
 
+
 def add_minimum_args(parser):
     parser.add_argument("-u",
                         "--url",
@@ -31,7 +32,8 @@ def add_minimum_args(parser):
     parser.add_argument("-v",
                         "--verbose",
                         dest="loglevel",
-                        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                        choices=['DEBUG', 'INFO',
+                                 'WARNING', 'ERROR', 'CRITICAL'],
                         default='WARNING',
                         help="Set log level")
     parser.add_argument("--timeout",
@@ -47,7 +49,7 @@ def add_common_args(parser, default_node='i=84', require_node=False):
                         "--nodeid",
                         help="Fully-qualified node ID (for example: i=85). Default: root node",
                         default=default_node,
-                        required=require_node,
+                        required=False,
                         metavar="NODE")
     parser.add_argument("-p",
                         "--path",
@@ -70,6 +72,7 @@ def add_common_args(parser, default_node='i=84', require_node=False):
 
 
 def _require_nodeid(parser, args):
+    return
     # check that a nodeid has been given explicitly, a bit hackish...
     if args.nodeid == "i=84" and args.path == "":
         parser.print_usage()
@@ -79,9 +82,11 @@ def _require_nodeid(parser, args):
 
 def parse_args(parser, requirenodeid=False):
     args = parser.parse_args()
-    logging.basicConfig(format="%(levelname)s: %(message)s", level=getattr(logging, args.loglevel))
+    logging.basicConfig(format="%(levelname)s: %(message)s",
+                        level=getattr(logging, args.loglevel))
     if args.url and '://' not in args.url:
-        logging.info("Adding default scheme %s to URL %s", ua.OPC_TCP_SCHEME, args.url)
+        logging.info("Adding default scheme %s to URL %s",
+                     ua.OPC_TCP_SCHEME, args.url)
         args.url = ua.OPC_TCP_SCHEME + '://' + args.url
     if requirenodeid:
         _require_nodeid(parser, args)
@@ -90,12 +95,11 @@ def parse_args(parser, requirenodeid=False):
 
 def get_node(client, args):
     node = client.get_node(args.nodeid)
-    if args.path:
-        path = args.path.split(",")
-        if node.nodeid == ua.NodeId(84, 0) and path[0] == "0:Root":
-            # let user specify root if not node given
-            path = path[1:]
-        node = node.get_child(path)
+    path = '0:Objects, 2:DeviceSet, 4:rfr310'.split(",")
+    if node.nodeid == ua.NodeId(84, 0) and path[0] == "0:Root":
+        # let user specify root if not node given
+        path = path[1:]
+    node = node.get_child(path)
     return node
 
 
@@ -145,16 +149,16 @@ def _val_to_variant(val, args):
         return _arg_to_variant(val, array, int, ua.VariantType.SByte)
     elif args.datatype == "byte":
         return _arg_to_variant(val, array, int, ua.VariantType.Byte)
-    #elif args.datatype == "uint8":
-        #return _arg_to_variant(val, array, int, ua.VariantType.Byte)
+    # elif args.datatype == "uint8":
+        # return _arg_to_variant(val, array, int, ua.VariantType.Byte)
     elif args.datatype == "uint16":
         return _arg_to_variant(val, array, int, ua.VariantType.UInt16)
     elif args.datatype == "uint32":
         return _arg_to_variant(val, array, int, ua.VariantType.UInt32)
     elif args.datatype == "uint64":
         return _arg_to_variant(val, array, int, ua.VariantType.UInt64)
-    #elif args.datatype == "int8":
-        #return ua.Variant(int(val), ua.VariantType.Int8)
+    # elif args.datatype == "int8":
+        # return ua.Variant(int(val), ua.VariantType.Int8)
     elif args.datatype == "int16":
         return _arg_to_variant(val, array, int, ua.VariantType.Int16)
     elif args.datatype == "int32":
@@ -195,7 +199,7 @@ def _configure_client_with_args(client, args):
     client.set_security_string(args.security)
 
 
-def uacall():
+def prepare():
     parser = argparse.ArgumentParser(description="Call method of a node")
     add_common_args(parser)
     parser.add_argument("-m",
@@ -215,7 +219,8 @@ def uacall():
                         "--datatype",
                         dest="datatype",
                         default="guess",
-                        choices=["guess", 'byte', 'sbyte', 'nodeid', 'expandednodeid', 'qualifiedname', 'browsename', 'string', 'float', 'double', 'int16', 'int32', "int64", 'uint16', 'uint32', 'uint64', "bool", "string", 'datetime', 'bytestring', 'xmlelement', 'statuscode', 'localizedtext'],
+                        choices=["guess", 'byte', 'sbyte', 'nodeid', 'expandednodeid', 'qualifiedname', 'browsename', 'string', 'float', 'double', 'int16',
+                                 'int32', "int64", 'uint16', 'uint32', 'uint64', "bool", "string", 'datetime', 'bytestring', 'xmlelement', 'statuscode', 'localizedtext'],
                         help="Data type to return")
     parser.add_argument("value",
                         help="Value to use for call to method, if any",
@@ -224,64 +229,59 @@ def uacall():
 
     args = parse_args(parser, requirenodeid=True)
 
-    client = Client(args.url, timeout=args.timeout)
+    client = Client('opc.tcp://10.10.10.13:4840', timeout=args.timeout)
     _configure_client_with_args(client, args)
     client.connect()
     try:
         node = get_node(client, args)
-        # val must be a tuple in order to enable method calls without arguments
-        if ( args.value is None ):
-            val = () #empty tuple
-        else:
-            val = (_val_to_variant(args.value, args),) # tuple with one element
+        val = (_val_to_variant('magicwordxx', args),)
 
         # determine method to call: Either explicitly given or automatically select the method of the selected node.
         methods = node.get_methods()
         method_id = None
         #print( "methods=%s" % (methods) )
 
-        if ( args.method is None ):
-            if ( len( methods ) == 0 ):
-                raise ValueError( "No methods in selected node and no method given" )
-            elif ( len( methods ) == 1 ):
+        if (args.method is None):
+            if (len(methods) == 0):
+                raise ValueError(
+                    "No methods in selected node and no method given")
+            elif (len(methods) == 1):
                 method_id = methods[0]
             else:
                 method_id = methods[0]  # This should be scan? TODO
         else:
             for m in methods:
-                if ( m.nodeid.Identifier == args.method ):
+                if (m.nodeid.Identifier == args.method):
                     method_id = m.nodeid
                     break
 
-        if ( method_id is None):
+        if (method_id is None):
             # last resort:
-            method_id = ua.NodeId( identifier=args.method )#, namespaceidx=? )#, nodeidtype=?): )
+            # , namespaceidx=? )#, nodeidtype=?): )
+            method_id = ua.NodeId(identifier=args.method)
 
         #print( "method_id=%s\nval=%s" % (method_id,val) )
 
-
-        #for _ in range(1):
+        # for _ in range(1):
         #    with suppress(Exception):
-        i = 0
-        while True:
-            result_variants = node.call_method( method_id, *val )
-            #ids = ""
-            #for res in result_variants[0]:
-            #    ids = res.Body.hex()[50:][:24][-3:]
-            #    ids = "First ID: " + str(int(ids, 16))
-            #    #print(res.Body.hex()[50:][:24])
-            #print("%d tags found. %s" % (min([len(result_variants[0]), 99]), ids))
-            #from time import sleep
-            ##sleep(2)
-            print(i)
-            i+=1
-
+        return client, node, method_id, val
     finally:
-        client.disconnect()
-    sys.exit(0)
-    print(args)
+        pass
 
+
+def call_read(node, method_id, val):
+    result_variants = node.call_method(method_id, *val)
+    ids = []
+    for res in result_variants[0]:
+        ids.append(res.Body.hex()[50:][:24])
+    return ids
 
 
 if __name__ == "__main__":
-    uacall()
+    client, node, method_id, val = prepare()
+
+    try:
+        ids = call_read(node, method_id, val)
+        print(ids)
+    finally:
+        client.disconnect()

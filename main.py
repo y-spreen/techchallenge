@@ -1,4 +1,6 @@
 import signal
+from uhf import call_read as read_uhf
+from uhf import prepare as prepare_uhf
 from card.mfrc.Read import read_once
 import RPi.GPIO as GPIO
 from random import randint
@@ -10,8 +12,8 @@ CARD_WINDOW = 5  # seconds
 DELAY = .1  # 10Hz
 
 
-def read_uhf_ids():
-    return []
+def read_uhf_ids(node, method_id, val):
+    return read_uhf(node, method_id, val)
 
 
 def read_card():
@@ -151,15 +153,16 @@ def booking_thread():
         ENTER_EVENTS = []
 
         for e in exit_events:
-            print(' x', end="\r")
+            print('exit ' + str(e))
             if e in in_booking:
-                in_booking = filter(lambda b: b != e, in_booking)
+                in_booking = [b for b in filter(lambda b: b != e, in_booking)]
             elif e in in_returning:
-                in_returning = filter(lambda b: b != e, in_returning)
+                in_returning = [b for b in filter(
+                    lambda b: b != e, in_returning)]
             else:
                 LIGHT = Light.error
         for e in enter_events:
-            print(' e', end="\r")
+            print('enter ' + str(e))
             if booked.get(e, None) is None:
                 in_booking.append(e)
                 LIGHT = Light.warning
@@ -168,7 +171,7 @@ def booking_thread():
                 del booked[e]
                 LIGHT = Light.notification
         if card_event is not None:
-            print(' c', end="\r")
+            print('card' + card_event)
             if len(in_booking) > 0:
                 for b in in_booking:
                     booked[b] = card_event
@@ -180,24 +183,30 @@ def uhf_thread():
     readings = []
     sleep(5)
 
-    while not DO_STOP:
-        sleep(DELAY)
+    client, node, method_id, val = prepare_uhf()
 
-        ids = read_uhf_ids()
-        for v in ids:
-            if v not in [id_ for (id_, _) in readings]:
-                id_entered(v)
-            readings.append((v, datetime.now()))
+    try:
+        while not DO_STOP:
+            sleep(DELAY)
 
-        i = 0
-        for v in readings:
-            if (datetime.now() - v[1]).total_seconds() > UHF_WINDOW:
-                v = v[0]
-                del readings[i]
+            ids = read_uhf_ids(node, method_id, val)
+            for v in ids:
                 if v not in [id_ for (id_, _) in readings]:
-                    id_exited(v)
-            else:
-                i += 1
+                    id_entered(v)
+                readings.append((v, datetime.now()))
+
+            i = 0
+            for v in readings:
+                if (datetime.now() - v[1]).total_seconds() > UHF_WINDOW:
+                    v = v[0]
+                    del readings[i]
+                    if v not in [id_ for (id_, _) in readings]:
+                        id_exited(v)
+                else:
+                    i += 1
+        client.disconnect()
+    finally:
+        client.disconnect()
 
 
 def end_read(*_):
