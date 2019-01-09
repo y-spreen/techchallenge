@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 from random import randint
 from datetime import datetime
 from time import sleep
@@ -8,7 +9,7 @@ DELAY = .1  # 10Hz
 
 
 def read_uhf_ids():
-    return [randint(0, 10)]
+    return []
 
 
 def read_card():
@@ -73,15 +74,20 @@ LIGHT = Light.initial
 
 
 def set_light(g, y, r, b):
-    g = '.#'[g]
-    y = '.#'[y]
-    r = '.#'[r]
-    b = '.#'[b]
-    print('   '+g+y+r+b+'      ', end="\r")
+    GPIO.output(4, GPIO.LOW if r else GPIO.HIGH)
+    GPIO.output(17, GPIO.LOW if y else GPIO.HIGH)
+    GPIO.output(22, GPIO.LOW if b else GPIO.HIGH)
+    GPIO.output(27, GPIO.LOW if g else GPIO.HIGH)
 
 
 def light_thread():
     global LIGHT
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(4, GPIO.OUT)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.setup(22, GPIO.OUT)
+    GPIO.setup(27, GPIO.OUT)
 
     is_one_time = [False, False, False, False, True, True]
     # g y r b
@@ -92,10 +98,10 @@ def light_thread():
         [(0, 0, 0, 0)] * 2 + [(0, 0, 1, 0)] * 2,
         [(0, 0, 0, 0)] * 4 + [(0, 0, 0, 1)] * 2 +
         [(0, 0, 0, 0)] * 2 + [(0, 0, 0, 1)] * 2,
-        [(0, 0, 0, 0)] * 2 + [(1, 0, 0, 0)] * 2 +
-        [(0, 1, 0, 0)] * 2 + [(0, 0, 1, 0)] * 2 +
-        [(0, 0, 0, 1)] * 2 + [(0, 0, 1, 0)] * 2 +
+        [(0, 0, 0, 0)] * 2 + [(0, 0, 1, 0)] * 2 +
         [(0, 1, 0, 0)] * 2 + [(1, 0, 0, 0)] * 2 +
+        [(0, 0, 0, 1)] * 2 + [(1, 0, 0, 0)] * 2 +
+        [(0, 1, 0, 0)] * 2 + [(0, 0, 1, 0)] * 2 +
         [(0, 0, 0, 0)] * 2 + [(1, 1, 1, 1)] * 2 +
         [(0, 0, 0, 0)] * 2 + [(1, 1, 1, 1)] * 2,
     ]
