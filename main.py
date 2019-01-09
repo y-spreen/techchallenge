@@ -1,3 +1,5 @@
+import signal
+from card.mfrc.Read import read_once
 import RPi.GPIO as GPIO
 from random import randint
 from datetime import datetime
@@ -13,12 +15,13 @@ def read_uhf_ids():
 
 
 def read_card():
-    return None if randint(0, 1) else 7
+    return read_once()
 
 
 CARD_EVENT = None
 ENTER_EVENTS = []
 EXIT_EVENTS = []
+DO_STOP = False
 
 
 def card_read(c):
@@ -37,9 +40,10 @@ def id_entered(i):
 
 
 def card_thread():
+    global DO_STOP
     reading = None
 
-    while True:
+    while not DO_STOP:
         sleep(DELAY)
 
         card = read_card()
@@ -74,20 +78,23 @@ LIGHT = Light.initial
 
 
 def set_light(g, y, r, b):
-    GPIO.output(4, GPIO.LOW if r else GPIO.HIGH)
-    GPIO.output(17, GPIO.LOW if y else GPIO.HIGH)
-    GPIO.output(22, GPIO.LOW if b else GPIO.HIGH)
-    GPIO.output(27, GPIO.LOW if g else GPIO.HIGH)
+    global DO_STOP
+    if DO_STOP:
+        return
+    GPIO.output(7, GPIO.LOW if r else GPIO.HIGH)
+    GPIO.output(11, GPIO.LOW if y else GPIO.HIGH)
+    GPIO.output(13, GPIO.LOW if g else GPIO.HIGH)
+    GPIO.output(15, GPIO.LOW if b else GPIO.HIGH)
 
 
 def light_thread():
-    global LIGHT
+    global LIGHT, DO_STOP
 
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(4, GPIO.OUT)
-    GPIO.setup(17, GPIO.OUT)
-    GPIO.setup(22, GPIO.OUT)
-    GPIO.setup(27, GPIO.OUT)
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(7, GPIO.OUT)
+    GPIO.setup(11, GPIO.OUT)
+    GPIO.setup(13, GPIO.OUT)
+    GPIO.setup(15, GPIO.OUT)
 
     is_one_time = [False, False, False, False, True, True]
     # g y r b
@@ -108,7 +115,7 @@ def light_thread():
 
     tick = 0
     light = LIGHT
-    while True:
+    while not DO_STOP:
         sleep(DELAY)
 
         if LIGHT != -1:
@@ -127,13 +134,13 @@ def light_thread():
 
 
 def booking_thread():
-    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, LIGHT
+    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, LIGHT, DO_STOP
     booked = {}
     in_booking = []
     in_returning = []
     booking_card = None
 
-    while True:
+    while not DO_STOP:
         sleep(DELAY)
 
         card_event = CARD_EVENT
@@ -169,10 +176,11 @@ def booking_thread():
 
 
 def uhf_thread():
+    global DO_STOP
     readings = []
     sleep(5)
 
-    while True:
+    while not DO_STOP:
         sleep(DELAY)
 
         ids = read_uhf_ids()
@@ -192,7 +200,14 @@ def uhf_thread():
                 i += 1
 
 
+def end_read(*_):
+    global DO_STOP
+    DO_STOP = True
+    GPIO.cleanup()
+
+
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, end_read)
     Thread(target=uhf_thread).start()
     Thread(target=card_thread).start()
     Thread(target=booking_thread).start()
