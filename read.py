@@ -35,7 +35,7 @@ def get_member(c_id):
     auth_endpoint = "http://10.25.172.200:5000/auth"
     api_endpoint = "http://10.25.172.200:5000/user?uid=" + c_id
     username = "makerapi"
-    password = "***REMOVED***"
+    password = "B3GdGWFjvK=xsAYK"
 
     r = requests.post(auth_endpoint, json={
         "username": username,

@@ -48,11 +48,11 @@ def get_member(c_id):
         "password": password
     })
     r = r.json()
-    token = r["access_token"]
-    token = "JWT " + token
+    maker_api_token = r["access_token"]
+    maker_api_token = "JWT " + maker_api_token
 
     r = requests.get(api_endpoint, headers={
-        "Authorization": token
+        "Authorization": maker_api_token
     })
     return r.json()["MemberID"]
 
