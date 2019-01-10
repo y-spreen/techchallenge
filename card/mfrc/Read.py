@@ -55,12 +55,11 @@ def get_member(c_id):
 # Capture SIGINT for cleanup when the script is aborted
 
 
-def read_once():
-    # Hook the SIGINT
+def open_reader():
+    return MFRC522()
 
-    # Create an object of the class MFRC522
-    MIFAREReader = MFRC522()
 
+def read_once(MIFAREReader):
     # Welcome message
     # print("Welcome to the MFRC522 data read example")
     # print("Press Ctrl-C to stop.")

@@ -2,6 +2,7 @@ import signal
 from uhf import call_read as read_uhf
 from uhf import prepare as prepare_uhf
 from card.mfrc.Read import read_once
+from card.mfrc.Read import open_reader as open_card_reader
 import RPi.GPIO as GPIO
 from random import randint
 from datetime import datetime
@@ -16,8 +17,8 @@ def read_uhf_ids(node, method_id, val):
     return read_uhf(node, method_id, val)
 
 
-def read_card():
-    return read_once()
+def read_card(reader):
+    return read_once(reader)
 
 
 CARD_EVENT = None
@@ -44,11 +45,12 @@ def id_entered(i):
 def card_thread():
     global DO_STOP
     reading = None
+    reader = open_card_reader()
 
     while not DO_STOP:
         sleep(DELAY)
 
-        card = read_card()
+        card = read_card(reader)
         if card is not None:
             if reading is None or reading[0] != card:
                 card_read(card)
