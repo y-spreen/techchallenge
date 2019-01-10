@@ -275,14 +275,12 @@ SOUND = None
 def sound_thread():
     global DO_STOP, ON_PI, SOUND, DELAY
 
-    loop = {"alarm.mp3": 2.9}
+    loop = {"alarm.mp3": 3.05}
 
     exe = "omxplayer" if ON_PI else "afplay"
     time = sound = p = None
 
     while not DO_STOP:
-        sleep(DELAY)
-
         if SOUND is not None:
             sound = SOUND
             SOUND = None
@@ -290,8 +288,15 @@ def sound_thread():
                 p.terminate()
             p = subprocess.Popen([exe, sound])
             time = datetime.now()
-        if time is not None and loop.get(sound, 999999) < (datetime.now() - time).total_seconds():
+
+        l = loop.get(sound, 999999)
+        if time is not None and l < (datetime.now() - time).total_seconds():
             SOUND = sound
+        else:
+            if l - (datetime.now() - time).total_seconds() <= 1:
+                sleep(DELAY / 3)
+            else:
+                sleep(DELAY)
 
 
 def prompt():
