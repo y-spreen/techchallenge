@@ -54,12 +54,12 @@ def card_thread():
         return
 
     reading = None
-    reader = open_card_reader()
+    reader, token = open_card_reader()
 
     while DO_STOP:
         sleep(DELAY)
 
-        card = read_card(reader)
+        card = read_card(reader, token)
         if card is not None:
             if reading is None or reading[0] != card:
                 card_read(card)

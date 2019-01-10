@@ -27,16 +27,26 @@ import requests
 import os
 
 
-def member_for_card(card_data):
+def member_for_card(card_data, token):
     card_data = card_data.split(",")
     card_data = [int(c) for c in card_data]
     card_data = ["%02x" % c for c in card_data]
-    return get_member("".join(card_data))
+    return get_member("".join(card_data), token)
 
 
-def get_member(c_id):
-    auth_endpoint = "http://10.25.172.200:5000/auth"
+def get_member(c_id, maker_api_token):
     api_endpoint = "http://10.25.172.200:5000/user?uid=" + c_id
+
+    maker_api_token = "JWT " + maker_api_token
+
+    r = requests.get(api_endpoint, headers={
+        "Authorization": maker_api_token
+    })
+    return r.json()["MemberID"]
+
+
+def open_reader():
+    auth_endpoint = "http://10.25.172.200:5000/auth"
     username = "makerapi"
 
     dirname, _ = os.path.split(os.path.abspath(__file__))
@@ -49,21 +59,10 @@ def get_member(c_id):
     })
     r = r.json()
     maker_api_token = r["access_token"]
-    maker_api_token = "JWT " + maker_api_token
-
-    r = requests.get(api_endpoint, headers={
-        "Authorization": maker_api_token
-    })
-    return r.json()["MemberID"]
-
-# Capture SIGINT for cleanup when the script is aborted
+    return MFRC522(), maker_api_token
 
 
-def open_reader():
-    return MFRC522()
-
-
-def read_once(MIFAREReader):
+def read_once(MIFAREReader, token):
     # Welcome message
     # print("Welcome to the MFRC522 data read example")
     # print("Press Ctrl-C to stop.")
@@ -87,4 +86,4 @@ def read_once(MIFAREReader):
         # print(("Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])))
         card = "%s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
 
-        return member_for_card(card)
+        return member_for_card(card, token)
