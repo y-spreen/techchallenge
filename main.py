@@ -158,11 +158,11 @@ def booking_thread():
             print('exit ' + str(e))
             if e in in_booking:
                 in_booking = [b for b in filter(lambda b: b != e, in_booking)]
+                if booked.get(e, None) is None:
+                    LIGHT = Light.error
             elif e in in_returning:
                 in_returning = [b for b in filter(
                     lambda b: b != e, in_returning)]
-            else:
-                LIGHT = Light.error
         for e in enter_events:
             print('enter ' + str(e))
             if booked.get(e, None) is None:
