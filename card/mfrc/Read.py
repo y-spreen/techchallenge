@@ -24,6 +24,7 @@
 import RPi.GPIO as GPIO
 from .MFRC522 import MFRC522
 import requests
+import os
 
 
 def member_for_card(card_data):
@@ -37,7 +38,10 @@ def get_member(c_id):
     auth_endpoint = "http://10.25.172.200:5000/auth"
     api_endpoint = "http://10.25.172.200:5000/user?uid=" + c_id
     username = "makerapi"
-    password = "***REMOVED***"
+
+    dirname, _ = os.path.split(os.path.abspath(__file__))
+    with open(os.path.join(dirname, "pw.txt"), 'r') as f:
+        password = f.read()
 
     r = requests.post(auth_endpoint, json={
         "username": username,
