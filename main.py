@@ -1,13 +1,18 @@
-import signal
-from uhf import call_read as read_uhf
-from uhf import prepare as prepare_uhf
-from card.mfrc.Read import read_once
-from card.mfrc.Read import open_reader as open_card_reader
-import RPi.GPIO as GPIO
-from random import randint
-from datetime import datetime
-from time import sleep
 from threading import Thread
+from time import sleep
+from datetime import datetime
+from random import randint
+import subprocess
+import signal
+import os
+ON_PI = False
+if os.uname()[4][:3] == 'arm':
+    ON_PI = True
+    from uhf import call_read as read_uhf
+    from uhf import prepare as prepare_uhf
+    from card.mfrc.Read import read_once
+    from card.mfrc.Read import open_reader as open_card_reader
+    import RPi.GPIO as GPIO
 UHF_WINDOW = 10  # seconds
 CARD_WINDOW = 5  # seconds
 DELAY = .1  # 10Hz
@@ -43,11 +48,15 @@ def id_entered(i):
 
 
 def card_thread():
-    global DO_STOP
+    global DO_STOP, ON_PI
+
+    if not ON_PI:
+        return
+
     reading = None
     reader = open_card_reader()
 
-    while not DO_STOP:
+    while DO_STOP:
         sleep(DELAY)
 
         card = read_card(reader)
@@ -82,7 +91,7 @@ LIGHT = Light.initial
 
 
 def set_light(g, y, r, b):
-    global DO_STOP
+    global DO_STOP, ON_PI
     if DO_STOP:
         return
     GPIO.output(7, GPIO.LOW if r else GPIO.HIGH)
@@ -93,6 +102,9 @@ def set_light(g, y, r, b):
 
 def light_thread():
     global LIGHT, DO_STOP
+
+    if not ON_PI:
+        return
 
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(7, GPIO.OUT)
@@ -138,7 +150,7 @@ def light_thread():
 
 
 def booking_thread():
-    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, LIGHT, DO_STOP
+    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, LIGHT, DO_STOP, ON_PI, SOUND
     booked = {}
     in_booking = []
     in_returning = []
@@ -155,33 +167,44 @@ def booking_thread():
         ENTER_EVENTS = []
 
         for e in exit_events:
-            print('exit ' + str(e))
+            if ON_PI:
+                print('exit ' + str(e))
             if e in in_booking:
                 in_booking = [b for b in filter(lambda b: b != e, in_booking)]
                 if booked.get(e, None) is None:
                     LIGHT = Light.error
+                    SOUND = "do_not_leave.mp3"
             elif e in in_returning:
                 in_returning = [b for b in filter(
                     lambda b: b != e, in_returning)]
         for e in enter_events:
-            print('enter ' + str(e))
+            if ON_PI:
+                print('enter ' + str(e))
             if booked.get(e, None) is None:
                 in_booking.append(e)
                 LIGHT = Light.warning
+                SOUND = "please_place.mp3"
             else:
                 in_returning.append(e)
                 del booked[e]
                 LIGHT = Light.notification
+                SOUND = "returned.mp3"
         if card_event is not None:
-            print('card' + card_event)
+            if ON_PI:
+                print('card ' + card_event)
             if len(in_booking) > 0:
                 for b in in_booking:
                     booked[b] = card_event
                 LIGHT = Light.notification
+                SOUND = "checked.mp3"
 
 
 def uhf_thread():
-    global DO_STOP
+    global DO_STOP, ON_PI
+
+    if not ON_PI:
+        return
+
     readings = []
     sleep(5)
 
@@ -207,14 +230,53 @@ def uhf_thread():
                 else:
                     i += 1
         client.disconnect()
-    finally:
+    except:
         client.disconnect()
 
 
 def end_read(*_):
-    global DO_STOP
+    global DO_STOP, ON_PI
     DO_STOP = True
-    GPIO.cleanup()
+
+    if ON_PI:
+        GPIO.cleanup()
+
+
+SOUND = None
+
+
+def sound_thread():
+    global DO_STOP, ON_PI, SOUND, DELAY
+
+    exe = "omxplayer" if ON_PI else "afplay"
+    p = None
+
+    while not DO_STOP:
+        sleep(DELAY)
+
+        sound = SOUND
+        SOUND = None
+        if sound is not None:
+            if p is not None:
+                p.terminate()
+            p = subprocess.Popen([exe, sound])
+
+
+def prompt():
+    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, DO_STOP
+
+    while not DO_STOP:
+        cmd = input('> ')
+        c = cmd[0]
+        p = cmd[2:]
+        if c == 'q':
+            return end_read()
+        elif c == 'e':
+            ENTER_EVENTS.append(p)
+        elif c == 'x':
+            EXIT_EVENTS.append(p)
+        elif c == 'c':
+            CARD_EVENT = p
 
 
 if __name__ == "__main__":
@@ -223,3 +285,6 @@ if __name__ == "__main__":
     Thread(target=card_thread).start()
     Thread(target=booking_thread).start()
     Thread(target=light_thread).start()
+    Thread(target=sound_thread).start()
+    if not ON_PI:
+        prompt()
