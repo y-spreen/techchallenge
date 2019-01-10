@@ -155,6 +155,7 @@ def booking_thread():
     in_booking = []
     in_returning = []
     booking_card = None
+    error_stage = None
 
     while not DO_STOP:
         sleep(DELAY)
@@ -169,17 +170,27 @@ def booking_thread():
         for e in exit_events:
             if ON_PI:
                 print('exit ' + str(e))
+            if error_stage is not None:
+                continue
             if e in in_booking:
                 in_booking = [b for b in filter(lambda b: b != e, in_booking)]
                 if booked.get(e, None) is None:
-                    LIGHT = Light.error
+                    LIGHT = Light.mistake
                     SOUND = "do_not_leave.mp3"
+                    error_stage = (1, e, datetime.now())
+                    in_booking = []
+                    in_returning = []
             elif e in in_returning:
                 in_returning = [b for b in filter(
                     lambda b: b != e, in_returning)]
         for e in enter_events:
             if ON_PI:
                 print('enter ' + str(e))
+            if error_stage is not None:
+                if error_stage[1] != e:
+                    continue
+                # recover error
+                error_stage = None
             if booked.get(e, None) is None:
                 in_booking.append(e)
                 LIGHT = Light.warning
@@ -192,11 +203,27 @@ def booking_thread():
         if card_event is not None:
             if ON_PI:
                 print('card ' + card_event)
+            if error_stage is not None:
+                continue
             if len(in_booking) > 0:
                 for b in in_booking:
                     booked[b] = card_event
                 LIGHT = Light.notification
                 SOUND = "checked.mp3"
+        if error_stage is not None:
+            error_lengths = [0, 3, 6, 9999999]
+            stage = error_stage[0]
+            if (datetime.now() - error_stage[2]).total_seconds() >= error_lengths[stage]:
+                # escalate error further
+                stage += 1
+
+                error_stage = (stage,
+                               error_stage[1], datetime.now())
+                if stage == 2:
+                    SOUND = "alarm_soon.mp3"
+                if stage == 3:
+                    LIGHT = Light.error
+                    SOUND = "alarm.mp3"
 
 
 def uhf_thread():
@@ -248,22 +275,32 @@ SOUND = None
 def sound_thread():
     global DO_STOP, ON_PI, SOUND, DELAY
 
+    loop = ["alarm.mp3"]
+
     exe = "omxplayer" if ON_PI else "afplay"
-    p = None
+    sound = p = None
 
     while not DO_STOP:
         sleep(DELAY)
 
-        sound = SOUND
-        SOUND = None
-        if sound is not None:
+        if SOUND is not None:
+            sound = SOUND
+            SOUND = None
             if p is not None:
                 p.terminate()
+            p = subprocess.Popen([exe, sound])
+        if sound in loop and p.poll() is not None:
             p = subprocess.Popen([exe, sound])
 
 
 def prompt():
     global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, DO_STOP
+
+    print("""Commands:
+ q:      quit,
+ e <id>: enter kit,
+ x <id>: exit kit,
+ c <id>: place card""")
 
     while not DO_STOP:
         cmd = input('> ')
