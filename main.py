@@ -13,8 +13,8 @@ if os.uname()[4][:3] == 'arm':
     from card.mfrc.Read import read_once
     from card.mfrc.Read import open_reader as open_card_reader
     import RPi.GPIO as GPIO
-UHF_WINDOW = 10  # seconds
-CARD_WINDOW = 5  # seconds
+UHF_WINDOW = 5  # seconds
+CARD_WINDOW = 4  # seconds
 DELAY = .1  # 10Hz
 USE_API = False
 
@@ -151,16 +151,19 @@ def light_thread():
 
 
 def booking_thread():
-    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, LIGHT, DO_STOP, ON_PI, SOUND
+    global CARD_EVENT, EXIT_EVENTS, ENTER_EVENTS, LIGHT, DO_STOP, ON_PI, SOUND, UHF_WINDOW, CARD_WINDOW
     booked = {}
     in_booking = []
     in_returning = []
     booking_card = None
     error_stage = None
+    last_return = None
+    replay_card = False
 
     while not DO_STOP:
         sleep(DELAY)
 
+        replay_card = False
         card_event = CARD_EVENT
         CARD_EVENT = None
         exit_events = EXIT_EVENTS
@@ -193,24 +196,34 @@ def booking_thread():
                 # recover error
                 error_stage = None
             if booked.get(e, None) is None:
-                in_booking.append(e)
+                if len(in_booking) == 0:
+                    SOUND = "please_place.mp3"
                 LIGHT = Light.warning
-                SOUND = "please_place.mp3"
+                in_booking.append(e)
+                if booking_card is not None and (datetime.now() - booking_card[1]).total_seconds() <= CARD_WINDOW:
+                    if card_event is None:
+                        card_event = booking_card[0]
+                        replay_card = True
             else:
                 in_returning.append(e)
                 del booked[e]
-                LIGHT = Light.notification
-                SOUND = "returned.mp3"
+                if last_return is None or (datetime.now() - last_return).total_seconds() > UHF_WINDOW:
+                    LIGHT = Light.notification
+                    SOUND = "returned.mp3"
+                    last_return = datetime.now()
         if card_event is not None:
             if ON_PI:
                 print('card ' + card_event)
             if error_stage is not None:
                 continue
+            if not replay_card:
+                booking_card = (card_event, datetime.now())
             if len(in_booking) > 0:
                 for b in in_booking:
                     booked[b] = card_event
-                LIGHT = Light.notification
-                SOUND = "checked.mp3"
+                if not replay_card:
+                    LIGHT = Light.notification
+                    SOUND = "checked.mp3"
         if error_stage is not None:
             error_lengths = [0, 3, 6, 9999999]
             stage = error_stage[0]
