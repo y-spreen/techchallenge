@@ -7,7 +7,7 @@ import logging
 # import copy
 # import traceback
 
-from opcua import ua
+from my_opcua import ua
 
 
 class MonitoredItemData(object):

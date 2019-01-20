@@ -1,4 +1,4 @@
-from opcua import ua
+from my_opcua import ua
 from enum import Enum
 
 import xml.etree.ElementTree as Et

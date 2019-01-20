@@ -22,8 +22,8 @@ def read_uhf_ids(node, method_id, val):
     return read_uhf(node, method_id, val)
 
 
-def read_card(reader):
-    return read_once(reader)
+def read_card(reader, token):
+    return read_once(reader, token)
 
 
 CARD_EVENT = None
@@ -56,7 +56,7 @@ def card_thread():
     reading = None
     reader, token = open_card_reader()
 
-    while DO_STOP:
+    while not DO_STOP:
         sleep(DELAY)
 
         card = read_card(reader, token)
@@ -292,7 +292,7 @@ def sound_thread():
         l = loop.get(sound, 999999)
         if time is not None and l < (datetime.now() - time).total_seconds():
             SOUND = sound
-        else:
+        elif time is not None:
             if l - (datetime.now() - time).total_seconds() <= 1:
                 sleep(DELAY / 3)
             else:

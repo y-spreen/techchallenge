@@ -1,11 +1,14 @@
 
-from opcua import ua
+from my_opcua import ua
 from threading import Lock
 from functools import partial
 
+
 class LocalDiscoveryService(object):
-    REG_EXPIRE_TIMEOUT = 600 # [s] registration expiration (remote servers only).
-    MAX_REGISTRATIONS = 32 # [-] Limits the number of simultaneous registrations.
+    # [s] registration expiration (remote servers only).
+    REG_EXPIRE_TIMEOUT = 600
+    # [-] Limits the number of simultaneous registrations.
+    MAX_REGISTRATIONS = 32
 
     class ServerDescription(object):
         def __init__(self, appDesc, uaDiscoveryConfiguration=None):
@@ -16,8 +19,10 @@ class LocalDiscoveryService(object):
 
     def __init__(self, parent=None):
         self._parent = parent
-        self._lock = Lock() # server registration & expiration from different threads.
-        self._known_servers = {} # _known_servers[appUri] = ServerDescription instance
+        # server registration & expiration from different threads.
+        self._lock = Lock()
+        # _known_servers[appUri] = ServerDescription instance
+        self._known_servers = {}
 
     @property
     def thread_loop(self):
@@ -32,7 +37,8 @@ class LocalDiscoveryService(object):
                     servers.append(srvDesc.applicationDescription)
                     continue
                 # Filter on server uris.
-                srv_uri = srvDesc.applicationDescription.ApplicationUri.split(":")
+                srv_uri = srvDesc.applicationDescription.ApplicationUri.split(
+                    ":")
                 for uri in params.ServerUris:
                     uri = uri.split(":")
                     if srv_uri[:len(uri)] == uri:
@@ -48,7 +54,8 @@ class LocalDiscoveryService(object):
         if appUri in self._known_servers:
             pass
         elif len(self._known_servers) >= self.MAX_REGISTRATIONS:
-            raise Exception('Maximum number of registrations reached: {:d}'.format(self.MAX_REGISTRATIONS))
+            raise Exception('Maximum number of registrations reached: {:d}'.format(
+                self.MAX_REGISTRATIONS))
         with self._lock:
             self._known_servers[appUri] = srvDesc
 
@@ -61,7 +68,7 @@ class LocalDiscoveryService(object):
         appUri = srvDesc.applicationDescription.ApplicationUri
         # Set expired flag, then check if the registration in _known_servers was
         # renewed. If not renewed before expiration, remove from _known_servers.
-        srvDesc.isExpired = True 
+        srvDesc.isExpired = True
         with self._lock:
             if self._known_servers[appUri].isExpired:
                 del self._known_servers[appUri]
@@ -78,7 +85,8 @@ class LocalDiscoveryService(object):
         # FIXME: select discovery uri using reachability from client network
         appDesc.GatewayServerUri = registeredServer.GatewayServerUri
         # Create and add ServerDescription, so it is resolved by find_servers().
-        srvDesc = LocalDiscoveryService.ServerDescription(appDesc, uaDiscoveryConfiguration)
+        srvDesc = LocalDiscoveryService.ServerDescription(
+            appDesc, uaDiscoveryConfiguration)
         self.add_server_description(srvDesc)
         # Auto-expire server registrations after REG_EXPIRE_TIMEOUT seconds.
         expire_cb = partial(self._expire_server_description, srvDesc)
