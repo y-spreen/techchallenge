@@ -35,6 +35,8 @@ def member_for_card(card_data, token):
 
 
 def get_member(c_id, maker_api_token):
+    if maker_api_token == "":
+        return c_id
     api_endpoint = "http://10.25.172.200:5000/user?uid=" + c_id
 
     maker_api_token = "JWT " + maker_api_token
@@ -45,20 +47,22 @@ def get_member(c_id, maker_api_token):
     return r.json()["MemberID"]
 
 
-def open_reader():
-    auth_endpoint = "http://10.25.172.200:5000/auth"
-    username = "makerapi"
+def open_reader(use_api):
+    maker_api_token = ""
+    if use_api:
+        auth_endpoint = "http://10.25.172.200:5000/auth"
+        username = "makerapi"
 
-    dirname, _ = os.path.split(os.path.abspath(__file__))
-    with open(os.path.join(dirname, "pw.txt"), 'r') as f:
-        password = f.read()
+        dirname, _ = os.path.split(os.path.abspath(__file__))
+        with open(os.path.join(dirname, "pw.txt"), 'r') as f:
+            password = f.read()
 
-    r = requests.post(auth_endpoint, json={
-        "username": username,
-        "password": password
-    })
-    r = r.json()
-    maker_api_token = r["access_token"]
+        r = requests.post(auth_endpoint, json={
+            "username": username,
+            "password": password
+        })
+        r = r.json()
+        maker_api_token = r["access_token"]
     return MFRC522(), maker_api_token
 
 

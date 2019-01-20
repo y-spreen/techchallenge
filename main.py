@@ -16,6 +16,7 @@ if os.uname()[4][:3] == 'arm':
 UHF_WINDOW = 10  # seconds
 CARD_WINDOW = 5  # seconds
 DELAY = .1  # 10Hz
+USE_API = False
 
 
 def read_uhf_ids(node, method_id, val):
@@ -48,13 +49,13 @@ def id_entered(i):
 
 
 def card_thread():
-    global DO_STOP, ON_PI
+    global DO_STOP, ON_PI, USE_API
 
     if not ON_PI:
         return
 
     reading = None
-    reader, token = open_card_reader()
+    reader, token = open_card_reader(USE_API)
 
     while not DO_STOP:
         sleep(DELAY)

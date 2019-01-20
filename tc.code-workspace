@@ -1,12 +1,8 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"uri": "ssh://pi/",
-			"name": "SSH FS - pi"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {}
 }
